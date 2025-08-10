@@ -4,18 +4,23 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
+
 df = pd.read_csv('iris.data.csv', header=None)
 df.shape
 df.head(10)
 print(df)
+
 df.info()
+
 df.isnull().sum()
+
 X = df.iloc[:, :- 1].values
 y = df.iloc[:, -1].values 
 X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
 nb_classifier = GaussianNB()
 nb_classifier.fit(X_train, y_train)
 y_pred = nb_classifier.predict(X_test)
+
 accuracy - accuracy_score(y_test, y_pred)
 report = classification_report(y_test, y_pred)
 print (f'Accuracy: {accuracy * 100 :. 2f}%' )
