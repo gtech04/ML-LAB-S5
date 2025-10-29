@@ -335,35 +335,34 @@ def plot_svm_hyperplane(clf, X, y):
 plot_svm_hyperplane(svm_classifier, x_train, y_train)
 
 #kmean
-import pandas as pd 
-import numpy as np 
-import seaborn as sns
+import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from sklearn.datasets import load_iris
+import seaborn as sns
 from sklearn.cluster import KMeans
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix,classification_report 
 
-X, y = load_iris(return_X_y=True)
-kmeans = KMeans(n_clusters = 3, random_state = 2) 
-kmeans.fit(X)
-pred = kmeans.fit_predict(X)
+df=pd.read_csv("/content/Boston.csv")
 
-plt.figure(figsize=(12,5))
-plt.subplot(1,2,1)
-plt.scatter(X[:,0],X[:,1],c = pred, cmap=cm.Accent) 
-plt.grid(True)
-for center in kmeans.cluster_centers_: center = center[:2]
-plt.scatter(center[0],center[1],marker = '^',c = 'red') 
-plt.xlabel("petal length (cm)")
-plt.ylabel("petal width (cm)")
+df.head()
 
-plt.subplot(1,2,2) 
-plt.scatter(X[:,2],X[:,3],c = pred, cmap=cm.Accent) 
-plt.grid(True)
-for center in kmeans.cluster_centers_:center = center[2:4]
-plt.scatter(center[0],center[1],marker = '^',c = 'red') 
-plt.xlabel("sepal length (cm)")
-plt.ylabel("sepal width (cm)") 
+kmeans=KMeans(n_clusters=3)
+
+x=df[["rm","dis"]]
+
+kmeans.fit(x)
+
+pred=kmeans.predict(x)
+
+center=kmeans.cluster_centers_
+labels=kmeans.labels_
+
+
+plt.figure(figsize=(12,8))
+plt.scatter(x.iloc[:,0], x.iloc[:,1], c=labels, cmap="viridis", label="data Points")
+plt.scatter(center[:,0], center[:,1], marker="x", c="red", label="Centroid")
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.legend()
 plt.show()
 
 #ann
