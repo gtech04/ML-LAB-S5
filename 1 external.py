@@ -240,31 +240,37 @@ plt.show()
 
 #decision
 import pandas as pd
-from sklearn import datasets
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier,plot_tree
 
-iris = datasets.load_iris()
-X = pd.DataFrame(iris.data, columns=iris.feature_names)
-y = pd.DataFrame(iris.target, columns=['target'])
+df=pd.read_csv("/content/Churn_Modelling.csv")
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+df.head()
 
-clf = DecisionTreeClassifier(criterion='entropy')
-clf.fit(X_train, y_train)
+x=df["CreditScore"]
+y=df["Gender"]
 
-y_pred = clf.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
+x_train,x_test,y_train,y_test=train_test_split(x,y,random_state=42,test_size=0.2)
 
-print(f"Accuracy: {accuracy}")
-print(classification_report(y_test, y_pred))
-print(confusion_matrix(y_test, y_pred))
+dt=DecisionTreeClassifier(criterion="entropy")
 
-plt.figure(figsize=(12, 8))
-plot_tree(clf, feature_names=iris.feature_names, class_names=iris.target_names, filled=True)
-plt.title("Decision Tree Visualization")
+dt.fit(x_train.values.reshape(-1,1),y_train)
+
+y_pred=dt.predict(x_test.values.reshape(-1,1))
+
+from sklearn.metrics import confusion_matrix,classification_report
+cm=confusion_matrix(y_test,y_pred)
+cr=classification_report(y_test,y_pred)
+
+sns.heatmap(cm,annot=True,cmap="Greens",fmt="d")
+
+print(cr)
+
+plt.figure(figsize=(100,100))
+plot_tree(dt,filled=True,fontsize=30,class_names=["CreditScore","gender"],feature_names=["male","female"])
+plt.legend()
 plt.show()
 
 #svm
